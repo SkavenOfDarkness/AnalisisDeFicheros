@@ -195,15 +195,19 @@ public class Palabra {
         try {          
             while((teclado = buffer.read()) != -1) {
                 if(((char)teclado != ' ') && ((char)teclado != '\n')) {
+                   //Cuenta los signos de salto de linea por eso añade uno mas en cada linea
                     numCaracteres++;
                 }
                 if((char)teclado == '\n') {
                     numLineas++;
                 }
-                if(((char)teclado == ' ') || ((char)teclado == '\n')) {
+                if(((char)teclado == ' ') || ((char)teclado == '\n')|| ((char)teclado == '.')) {
                     numPalabras++;
                 }
-            }    
+            }
+            //Contemplar cuando el archivo esta vacio FALTA
+            numLineas++; // Se añade uno porque cuando llega al -1 no cuenta la linea
+            numPalabras++; //Se añade uno porque cuando llega al -1 no cuenta la palabra
         } catch (IOException ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         }
