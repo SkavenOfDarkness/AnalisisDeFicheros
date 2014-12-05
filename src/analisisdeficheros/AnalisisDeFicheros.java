@@ -16,6 +16,7 @@ public class AnalisisDeFicheros {
             BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + t));
             System.out.println("Informe del fichero");
             System.out.println(Palabra.informeF(buffer));
+            buffer.close();
             System.out.println("");
             System.out.print("_-Menu Principal-_\n"
                 +"-------------------------------\n"
@@ -34,8 +35,14 @@ public class AnalisisDeFicheros {
             teclado.skip(1); 
             switch (opcion) {
                 case '1':
+                    BufferedReader buffer2 = new BufferedReader(new FileReader("ficheros/" + t));
+                    System.out.println(Palabra.RepetidaApariciones(buffer2));
+                    buffer2.close();
                     break;
                 case '2':
+                    BufferedReader buffer3 = new BufferedReader(new FileReader("ficheros/" + t));
+                    System.out.println(Palabra.numApariciones(buffer3));
+                    buffer3.close();
                     break;            
                 case '3':
                     break;

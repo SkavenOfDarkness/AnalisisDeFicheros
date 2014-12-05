@@ -209,4 +209,55 @@ public class Palabra {
         }
         return ("  Numero de caracteres: " + numCaracteres + "\n  Numero de palabras: " + numPalabras + "\n  Numero de lineas: " + numLineas);
     }
+    
+    public static String RepetidaApariciones(BufferedReader buffer){
+        char [] abecedario = {'a','b','c','d','e','f','g','h','i','j','k','l',
+        'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        int [] numAbecedario = new int[abecedario.length] ;
+        int teclado;
+        int identificador = numAbecedario[0];
+        try {
+            while((teclado = buffer.read()) != -1) {
+                for (int i = 0; i < numAbecedario.length; i++) {
+                    if((char)teclado == abecedario[i]){   
+                        numAbecedario[i]= numAbecedario[i]+1;
+                    }
+                }
+            }           
+        } catch (IOException ex){
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+        for (int e = 0; e < numAbecedario.length-1; e++) {
+            int num = 0;
+            if(numAbecedario[num] <(numAbecedario[e+1])){
+                num = numAbecedario[e+1];
+                identificador =e+1; 
+            }
+        }
+        return ("Letra: " +abecedario[identificador] + " - Numero de veces repetidas: "+ numAbecedario[identificador]);
+    }
+    
+    public static String numApariciones(BufferedReader buffer){
+        int teclado;
+        char [] caracPosibles = {'a','b','c','d','e','f','g','h','i','j','k','l',
+        'm','n','o','p','q','r','s','t','u','v','w','x','y','z','.',',',':','@','?','!','"','(',')','<','>',' '};
+        int [] contCaracteres = new int[caracPosibles.length];
+        
+        try {
+            while((teclado = buffer.read()) != -1) {
+                for (int i = 0; i < caracPosibles.length; i++) {
+                    if((char)teclado == caracPosibles[i]){   
+                        contCaracteres[i]++;
+                    }
+                }
+            }
+            for (int i = 0; i < caracPosibles.length; i++) {
+                System.out.println("Caracter:"+caracPosibles[i]+" - Cantidad: "+ contCaracteres[i]);
+            }
+        } catch (IOException ex){
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+        return "";
+    }
+    
 }
