@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AnalisisDeFicheros {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try {
             System.out.print("Introduce nombre del fichero a analizar: ");
             BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -45,6 +45,9 @@ public class AnalisisDeFicheros {
                     buffer3.close();
                     break;            
                 case '3':
+                    BufferedReader buffer4 = new BufferedReader(new FileReader("ficheros/" + t));
+                    System.out.println(Palabra.palabraMasRepetida(buffer4));
+                    buffer4.close();
                     break;
                 case '4':
                     break;

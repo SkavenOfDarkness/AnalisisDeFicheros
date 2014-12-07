@@ -213,7 +213,7 @@ public class Palabra {
         }
         return ("  Numero de caracteres: " + numCaracteres + "\n  Numero de palabras: " + numPalabras + "\n  Numero de lineas: " + numLineas);
     }
-    
+    // Opcion 1
     public static String RepetidaApariciones(BufferedReader buffer){
         char [] abecedario = {'a','b','c','d','e','f','g','h','i','j','k','l',
         'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
@@ -240,7 +240,7 @@ public class Palabra {
         }
         return ("Letra: " +abecedario[identificador] + " - Numero de veces repetidas: "+ numAbecedario[identificador]);
     }
-    
+    //Opcion 2
     public static String numApariciones(BufferedReader buffer){
         int teclado;
         char [] caracPosibles = {'a','b','c','d','e','f','g','h','i','j','k','l',
@@ -263,5 +263,24 @@ public class Palabra {
         }   
         return "";
     }
-    
+    //Opcion 3
+    public static String palabraMasRepetida(BufferedReader buffer) throws IOException, Exception{
+        final int MAX_PALABRAS=500;
+        int teclado;
+        Palabra [] palabras=new Palabra[MAX_PALABRAS];
+        int [] contadores=new int[MAX_PALABRAS];
+        //inicializamos el array de palabras.
+        for (int i=0; i<palabras.length;i++) {
+            palabras[i]=new Palabra();
+        }
+        int numPalabras=0;      
+        while ((teclado = buffer.read()) != -1) {     
+        }
+        
+       for (int i=0; i< numPalabras; i++) {
+           System.out.println("LA FRECUENCIA DE LA PALABRA " + palabras[i].toString()+
+                                       " ES " + contadores[i] + ".");
+       }
+       return "";
+    }
 }
