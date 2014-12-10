@@ -13,10 +13,10 @@ public class AnalisisDeFicheros {
             System.out.print("Introduce nombre del fichero a analizar: ");
             BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
             String t = teclado.readLine();
-            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + t));
+            //Generador de informes
             System.out.println("Informe del fichero");
-            System.out.println(Palabra.informeF(buffer));
-            buffer.close();
+            Palabra.informeF(t);           
+            //MENU
             System.out.println("");
             System.out.print("_-Menu Principal-_\n"
                 +"-------------------------------\n"
@@ -35,19 +35,10 @@ public class AnalisisDeFicheros {
             teclado.skip(1); 
             switch (opcion) {
                 case '1':
-                    BufferedReader buffer2 = new BufferedReader(new FileReader("ficheros/" + t));
-                    System.out.println(Palabra.RepetidaApariciones(buffer2));
-                    buffer2.close();
                     break;
                 case '2':
-                    BufferedReader buffer3 = new BufferedReader(new FileReader("ficheros/" + t));
-                    System.out.println(Palabra.numApariciones(buffer3));
-                    buffer3.close();
                     break;            
                 case '3':
-                    BufferedReader buffer4 = new BufferedReader(new FileReader("ficheros/" + t));
-                    System.out.println(Palabra.palabraMasRepetida(buffer4));
-                    buffer4.close();
                     break;
                 case '4':
                     break;
@@ -65,5 +56,4 @@ public class AnalisisDeFicheros {
             Logger.getLogger(AnalisisDeFicheros.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 }

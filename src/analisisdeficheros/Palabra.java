@@ -11,6 +11,7 @@ public class Palabra {
     // Atributos
     private static final char FINAL_SECUENCIA = '.';
     private static final int MAXIMO = 50;
+    private static final int MAXIMOPALABRAS=500;
     private static final char ESPACIO = ' ';
     private static char caracter = ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
@@ -33,7 +34,7 @@ public class Palabra {
     public void lectura(BufferedReader f) {
         numCaracteres=0;
         try {
-            while ((caracter!=FINAL_SECUENCIA)&&(caracter!=ESPACIO)) {
+            while (((caracter >= 'a') && (caracter <= 'z')) || ((caracter >= 'A') && (caracter <= 'Z'))) {
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
@@ -60,7 +61,7 @@ public class Palabra {
     
     public  static void buscarPalabra(BufferedReader f) {
         try {
-            while (caracter==ESPACIO) {
+            while (!((caracter >= 'a') && (caracter <= 'z') && (caracter >= 'A') && (caracter <= 'Z'))) {
                 caracter= (char) f.read();
             }
         } catch (IOException e) {}
@@ -190,32 +191,27 @@ public class Palabra {
         b.numCaracteres = a.numCaracteres;
     }
     
-    public static String informeF(BufferedReader buffer) {
-        int teclado, numCaracteres = 0, numLineas = 1, numPalabras = 1;
+    public static void informeF(String nomF) {
         try {
-            while((teclado = buffer.read()) != -1) {  
-                if(((char)teclado != ' ') && ((char)teclado != '\n') &&(teclado != 13)) {
-                    //Cuenta los signos de salto de linea por eso añade uno mas en cada linea
-                    System.err.println(teclado);
-                    numCaracteres++;
-                }
-                if((char)teclado == '\n') {
-                    numLineas++;
-                }
-                if(((char)teclado == ' ') || ((char)teclado == '\n')|| ((char)teclado == '.')) {
-                    numPalabras++;
-                }
-            }
-            //Contemplar cuando el archivo esta vacio FALTA
-//            numLineas++; // Se añade uno porque cuando llega al -1 no cuenta la linea
-//            numPalabras++; //Se añade uno porque cuando llega al -1 no cuenta la palabra
-            
-            
+            Auxiliar.ContarCaracteres(nomF);
         } catch (IOException ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return ("  Numero de caracteres: " + numCaracteres + "\n  Numero de palabras: " + numPalabras + "\n  Numero de lineas: " + numLineas);
     }
+    
+    public static void cantidaPalabras(BufferedReader buffer){
+        Palabra pal[] = new Palabra[MAXIMOPALABRAS];
+        for (int i = 0; i < pal.length; i++) {
+          pal[i]=new Palabra();
+        }
+        int i = 0;
+        while(quedenPalabra(buffer)){
+            pal[i].lectura(buffer);
+            System.out.println(" Palabra: "+ pal[i] );
+            i++;
+        }
+    }
+    
     // Opcion 1
     public static String RepetidaApariciones(BufferedReader buffer){
         char [] abecedario = {'a','b','c','d','e','f','g','h','i','j','k','l',
@@ -266,41 +262,5 @@ public class Palabra {
         }   
         return "";
     }
-    //Opcion 3
-    public static String palabraMasRepetida(BufferedReader buffer) throws IOException, Exception{
-        Palabra pal=new Palabra();
-        final int MAX_PALABRAS=500;
-        Palabra [] palabras=new Palabra[MAX_PALABRAS];
-        int [] contadores=new int[MAX_PALABRAS];
-        for (int i=0; i<palabras.length;i++) {
-            palabras[i]=new Palabra();
-        }
-        int numPalabras=0;
-        
-        while (quedenPalabra(buffer)) {
-            pal.lectura(buffer);
-            Palabra.copia(pal,palabras[numPalabras]);
-            int indice=0;
-            while (!(Palabra.iguales(pal, palabras[indice]))) {
-                indice++;
-            }
-            if (indice<numPalabras) {
-                contadores[indice]++;
-            } 
-            else {
-                contadores[indice]=1;
-                numPalabras++;
-            }     
-        }
-        
-       for (int i=0; i< numPalabras; i++) {
-           System.out.println("LA FRECUENCIA DE LA PALABRA " + palabras[i].toString()+
-                                       " ES " + contadores[i] + ".");
-       }    
-    
-
-        
-        
-       return "";
-    }
+   
 }
