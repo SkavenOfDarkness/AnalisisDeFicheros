@@ -14,8 +14,8 @@ import java.util.logging.Logger;
  */
 
 public class Auxiliar {
-    public static void ContarCaracteres(String pal) throws IOException{
-        FileReader fichero=new FileReader("ficheros/" + pal);;
+    public static void ContarCaracteres(String nomF) throws IOException{
+        FileReader fichero=new FileReader("ficheros/" + nomF);;
         try {
             int contador=0;
             int entrada=fichero.read();
@@ -42,5 +42,40 @@ public class Auxiliar {
         }
     }
     
+    public static void frecuenciaPalabras(String nomF) throws IOException{
+        try {
+            Palabra pal=new Palabra();
+            final int MAX_PALABRAS=500;
+            Palabra [] palabras=new Palabra[MAX_PALABRAS];
+            int [] contadores=new int[MAX_PALABRAS];
+            for (int i=0; i<palabras.length;i++) {
+                palabras[i]=new Palabra();
+            }
+            int numPalabras=0;
+            
+            System.out.print("INTRODUCIR TEXTO: ");
+            while (Palabra.quedenPalabra()) {
+                pal.lectura();
+                Palabra.copia(pal,palabras[numPalabras]);
+                int indice=0;     
+                while (!(Palabra.iguales(pal, palabras[indice]))) {
+                    indice++;
+                }
+                if (indice<numPalabras) {
+                    contadores[indice]++;
+                }
+                else {
+                    contadores[indice]=1;
+                    numPalabras++;
+                }
+            }
+            
+            for (int i=0; i< numPalabras; i++) {
+                System.out.println("LA FRECUENCIA DE LA PALABRA " + palabras[i].toString()+
+                        " ES " + contadores[i] + ".");
+            }} catch (Exception ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
 

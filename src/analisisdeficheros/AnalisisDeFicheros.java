@@ -39,6 +39,7 @@ public class AnalisisDeFicheros {
                 case '2':
                     break;            
                 case '3':
+                    Auxiliar.frecuenciaPalabras(t);
                     break;
                 case '4':
                     break;
