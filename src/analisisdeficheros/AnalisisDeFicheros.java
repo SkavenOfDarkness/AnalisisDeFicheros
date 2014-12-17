@@ -27,7 +27,7 @@ public class AnalisisDeFicheros {
                 +".  5.- Buscar texto \n"
                 +".  6.- Buscar palabras repetidas \n"
                 +".  7.- Codificar fichero \n"
-                +".  8.- Decodificar ficehro \n"
+                +".  8.- Decodificar fichero \n"
                 +".  0.- Salir \n"
                 );      
             System.out.print("Introduzca una opcion: ");
@@ -35,8 +35,10 @@ public class AnalisisDeFicheros {
             teclado.skip(1); 
             switch (opcion) {
                 case '1':
+                    Palabra.RepetidaApariciones(t);
                     break;
                 case '2':
+                    Palabra.numApariciones(t);
                     break;            
                 case '3':
                     Auxiliar.frecuenciaPalabras(t);

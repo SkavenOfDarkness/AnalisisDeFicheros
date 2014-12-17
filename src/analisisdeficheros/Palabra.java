@@ -61,7 +61,7 @@ public class Palabra {
     
     public  static void buscarPalabra(BufferedReader f) {
         try {
-            while (!((caracter >= 'a') && (caracter <= 'z') && (caracter >= 'A') && (caracter <= 'Z'))) {
+            while ((caracter == ESPACIO)) {
                 caracter= (char) f.read();
             }
         } catch (IOException e) {}
@@ -192,11 +192,9 @@ public class Palabra {
     }
     
     public static void informeF(String nomF) {
-        try {
-            Auxiliar.ContarCaracteres(nomF);
-        } catch (IOException ex) {
-            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Auxiliar.ContarCaracteres(nomF);
+        Auxiliar.ContarPalabras(nomF);
+        Auxiliar.ContarLineas(nomF);
     }
     
     public static void cantidaPalabras(BufferedReader buffer){
@@ -213,41 +211,48 @@ public class Palabra {
     }
     
     // Opcion 1
-    public static String RepetidaApariciones(BufferedReader buffer){
+    public static void RepetidaApariciones(String nomF){
+        BufferedReader fichero = null;
         char [] abecedario = {'a','b','c','d','e','f','g','h','i','j','k','l',
-        'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-        int [] numAbecedario = new int[abecedario.length] ;
-        int teclado;
-        int identificador = numAbecedario[0];
+                'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+            int [] numAbecedario = new int[abecedario.length] ;
+            int teclado;
+            int identificador = numAbecedario[0];
         try {
-            while((teclado = buffer.read()) != -1) {
-                for (int i = 0; i < numAbecedario.length; i++) {
-                    if((char)teclado == abecedario[i]){   
-                        numAbecedario[i]= numAbecedario[i]+1;
+            fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
+            try {
+                while((teclado = fichero.read()) != -1) {
+                    for (int i = 0; i < numAbecedario.length; i++) {
+                        if((char)teclado == abecedario[i]){
+                            numAbecedario[i]= numAbecedario[i]+1;
+                        }
                     }
                 }
-            }           
-        } catch (IOException ex){
-            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
-        }   
-        for (int e = 0; e < numAbecedario.length-1; e++) {
-            int num = 0;
-            if(numAbecedario[num] <(numAbecedario[e+1])){
-                num = numAbecedario[e+1];
-                identificador =e+1; 
+            } catch (IOException ex){
+                Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
             }
+            for (int e = 0; e < numAbecedario.length-1; e++) {
+                int num = 0;
+                if(numAbecedario[num] <(numAbecedario[e+1])){
+                    num = numAbecedario[e+1];
+                    identificador =e+1;
+                }
+            }   
+        } catch (FileNotFoundException ex){
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return ("Letra: " +abecedario[identificador] + " - Numero de veces repetidas: "+ numAbecedario[identificador]);
+        System.out.println("Letra: " +abecedario[identificador] + " - Numero de veces repetidas: "+ numAbecedario[identificador]);
     }
     //Opcion 2
-    public static String numApariciones(BufferedReader buffer){
+    public static String numApariciones(String nomF){
         int teclado;
         char [] caracPosibles = {'a','b','c','d','e','f','g','h','i','j','k','l',
         'm','n','o','p','q','r','s','t','u','v','w','x','y','z','.',',',':','@','?','!','"','(',')','<','>',' '};
         int [] contCaracteres = new int[caracPosibles.length];
-        
+        BufferedReader fichero = null;
         try {
-            while((teclado = buffer.read()) != -1) {
+            fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
+            while((teclado = fichero.read()) != -1) {
                 for (int i = 0; i < caracPosibles.length; i++) {
                     if((char)teclado == caracPosibles[i]){   
                         contCaracteres[i]++;
