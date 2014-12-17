@@ -6,6 +6,7 @@
 package analisisdeficheros;
 
 import java.io.*;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -116,6 +117,55 @@ public class Auxiliar {
             }} catch (Exception ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void Codificar(String nomF){
+        try {
+            BufferedReader fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
+            BufferedWriter fCodificado = new BufferedWriter(new FileWriter("ficheros/"+ nomF +".cod.txt"));
+            final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray();           
+            int entrada=fichero.read();
+            int SEMILLA = Aleatorio(ALFABETO.length);
+            System.err.println(SEMILLA);
+            while (entrada!=-1) {
+                int posicion = 0;
+                // EL CASTING (char) no es necesario
+                if ((((char)entrada >= 'a') && ((char)entrada <= 'z')) || ((char)entrada >= 'A') && ((char)entrada <= 'Z')
+                   ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
+                   ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
+                   ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
+                    //  . , : @ ? ! " ( ) < >
+                    while((char)entrada!=ALFABETO[posicion]){
+                        posicion++;
+                    }
+                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
+                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
+                    }
+                    else{
+                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
+                    }   
+                }
+                if(entrada == 13) {
+                    fCodificado.write("\r\n");
+                }
+                if((char)entrada == ' '){
+                    fCodificado.write(' ');
+                }
+                entrada=fichero.read();
+            }
+            fichero.close();
+            fCodificado.close();
+            System.out.println("La semilla usada es: " + SEMILLA);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static int Aleatorio(int tamaño) {
+        Random rnd = new Random();
+        return ((int)(rnd.nextDouble() * (double)tamaño));
     }
 }
 

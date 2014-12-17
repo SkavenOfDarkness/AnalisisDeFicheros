@@ -50,6 +50,7 @@ public class AnalisisDeFicheros {
                 case '6':
                     break;
                 case '7':
+                    Auxiliar.Codificar(t);
                     break;
                 case '8':
                     break;
