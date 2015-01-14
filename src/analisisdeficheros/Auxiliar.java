@@ -123,7 +123,8 @@ public class Auxiliar {
         try {
             BufferedReader fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
             BufferedWriter fCodificado = new BufferedWriter(new FileWriter("ficheros/"+ nomF +".cod.txt"));
-            final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray();           
+            final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray(); 
+            System.err.println("Tamano alfabeto:" + ALFABETO.length );
             int entrada=fichero.read();
             int SEMILLA = Aleatorio(ALFABETO.length);
             System.err.println(SEMILLA);
@@ -134,15 +135,21 @@ public class Auxiliar {
                    ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
                    ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
                    ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
-                    //  . , : @ ? ! " ( ) < >
+//                    //  . , : @ ? ! " ( ) < >
                     while((char)entrada!=ALFABETO[posicion]){
                         posicion++;
                     }
-                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
-                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
+//                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
+//                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
+//                    }
+//                    else{
+//                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
+//                    }   
+                    if(posicion > (SEMILLA-1)) {
+                        fCodificado.write(ALFABETO[posicion -SEMILLA]);
                     }
                     else{
-                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
+                        fCodificado.write(ALFABETO[posicion + (ALFABETO.length - SEMILLA)]);
                     }   
                 }
                 if(entrada == 13) {
@@ -151,7 +158,7 @@ public class Auxiliar {
                 if((char)entrada == ' '){
                     fCodificado.write(' ');
                 }
-                entrada=fichero.read();
+                    entrada=fichero.read();
             }
             fichero.close();
             fCodificado.close();
@@ -161,6 +168,59 @@ public class Auxiliar {
         } catch (IOException ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void Decodificar(String nomF){
+        try {
+            BufferedReader fichero = new BufferedReader(new FileReader("ficheros/"+ nomF +".cod.txt"));
+            BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+            final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray(); 
+            System.out.print("Introduce semilla: ");
+            int SEMILLA = Integer.parseInt(teclado.readLine());
+            int entrada=fichero.read();
+            System.err.println(SEMILLA);
+            while (entrada!=-1) {
+                int posicion = 0;
+                // EL CASTING (char) no es necesario
+                if ((((char)entrada >= 'a') && ((char)entrada <= 'z')) || ((char)entrada >= 'A') && ((char)entrada <= 'Z')
+                   ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
+                   ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
+                   ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
+//                    //  . , : @ ? ! " ( ) < >
+                    while((char)entrada!=ALFABETO[posicion]){
+                        posicion++;
+                    }
+//                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
+//                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
+//                    }
+//                    else{
+//                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
+//                    }   
+                    if(posicion < (SEMILLA-1)) {
+//                        System.out.println("posicion:"+posicion+"semilla:"+SEMILLA);
+//                        System.out.println(posicion + SEMILLA);
+                        System.out.print(ALFABETO[posicion-(ALFABETO.length - SEMILLA)]);
+                    }
+                    else{
+//                        System.out.println(ALFABETO.length - (posicion + SEMILLA));
+                        System.out.print(ALFABETO[(posicion + SEMILLA) - ALFABETO.length]);
+                    }   
+                }
+                if(entrada == 13) {
+                    System.out.println();
+                }
+                if((char)entrada == ' '){
+                    System.out.print(' ');
+                }
+                    entrada=fichero.read();
+            }
+            fichero.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     
     public static int Aleatorio(int tamaño) {

@@ -53,6 +53,7 @@ public class AnalisisDeFicheros {
                     Auxiliar.Codificar(t);
                     break;
                 case '8':
+                    Auxiliar.Decodificar(t);
                     break;
                 default: break;
             }  
