@@ -13,6 +13,7 @@ public class Palabra {
     private static final int MAXIMO = 50;
     private static final int MAXIMOPALABRAS=500;
     private static final char ESPACIO = ' ';
+    private static final int FINAL_FICHERO=-1;
     private static char caracter = ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
     private int numCaracteres = 0;
@@ -34,7 +35,7 @@ public class Palabra {
     public void lectura(BufferedReader f) {
         numCaracteres=0;
         try {
-            while (((caracter >= 'a') && (caracter <= 'z')) || ((caracter >= 'A') && (caracter <= 'Z'))) {
+            while ((caracter!=(char) FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')) {
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
@@ -54,14 +55,14 @@ public class Palabra {
     
     private static void buscarPalabra() throws Exception {
         //while (caracter == ESPACIO)
-        while ((caracter != FINAL_SECUENCIA) && !((caracter >= 'a') && (caracter <= 'z') && (caracter >= 'A') && (caracter <= 'Z'))) {
+        while ((caracter==ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
             caracter = (char)System.in.read();
         }
     }
     
     public  static void buscarPalabra(BufferedReader f) {
         try {
-            while ((caracter == ESPACIO)) {
+            while ((caracter == ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
                 caracter= (char) f.read();
             }
         } catch (IOException e) {}

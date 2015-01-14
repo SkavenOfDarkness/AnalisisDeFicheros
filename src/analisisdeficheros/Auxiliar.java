@@ -41,28 +41,19 @@ public class Auxiliar {
     }
     
     public static void ContarPalabras(String nomF){    
-            //        try {
-//            BufferedReader fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
-//            Palabra pal=new Palabra();
-//            final int MAX_PALABRAS=500;
-//            Palabra [] palabras=new Palabra[MAX_PALABRAS];
-//            for (int i=0; i<palabras.length;i++) {
-//                palabras[i]=new Palabra();
-//            }
-//            int numPalabras=0;
-//            System.err.println("Antes while");
-//            while (Palabra.quedenPalabra(fichero)){
-//                pal.lectura(fichero);
-//                numPalabras++;
-//                System.err.println(pal);
-//            }
-//            System.out.println("El número de palabras es: " + numPalabras);
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-           
-        
-    
+        int contador = 0;
+        try {
+            BufferedReader buffer=new BufferedReader(new FileReader("ficheros/" + nomF));
+            Palabra pal=new Palabra();
+            while(Palabra.quedenPalabra(buffer)){
+                pal.lectura(buffer);
+                contador++;
+            
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("El numero de palabras es: "+ contador);
     }
     
     public static void ContarLineas(String nomF){
