@@ -117,7 +117,7 @@ public class Auxiliar {
             final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray(); 
             System.err.println("Tamano alfabeto:" + ALFABETO.length );
             int entrada=fichero.read();
-            int SEMILLA = Aleatorio(ALFABETO.length);
+            int SEMILLA = Aleatorio(ALFABETO.length-1);
             System.err.println(SEMILLA);
             while (entrada!=-1) {
                 int posicion = 0;
@@ -126,21 +126,19 @@ public class Auxiliar {
                    ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
                    ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
                    ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
-//                    //  . , : @ ? ! " ( ) < >
                     while((char)entrada!=ALFABETO[posicion]){
                         posicion++;
-                    }
-//                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
-//                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
-//                    }
-//                    else{
-//                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
-//                    }   
-                    if(posicion > (SEMILLA-1)) {
-                        fCodificado.write(ALFABETO[posicion -SEMILLA]);
+                    }  
+                    if((posicion + SEMILLA) < ALFABETO.length) {
+                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
                     }
                     else{
-                        fCodificado.write(ALFABETO[posicion + (ALFABETO.length - SEMILLA)]);
+                        if((posicion + SEMILLA) <= ALFABETO.length){
+                            fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
+                        }
+                        else{
+                            fCodificado.write(ALFABETO[(posicion + SEMILLA) - ALFABETO.length]);
+                        }
                     }   
                 }
                 if(entrada == 13) {
@@ -149,7 +147,7 @@ public class Auxiliar {
                 if((char)entrada == ' '){
                     fCodificado.write(' ');
                 }
-                    entrada=fichero.read();
+                entrada=fichero.read();
             }
             fichero.close();
             fCodificado.close();
@@ -180,21 +178,12 @@ public class Auxiliar {
 //                    //  . , : @ ? ! " ( ) < >
                     while((char)entrada!=ALFABETO[posicion]){
                         posicion++;
-                    }
-//                    if((posicion+SEMILLA)<= (ALFABETO.length-SEMILLA)) {
-//                        fCodificado.write(ALFABETO[posicion + SEMILLA]);
-//                    }
-//                    else{
-//                        fCodificado.write(ALFABETO[ALFABETO.length - (posicion + SEMILLA)]);
-//                    }   
-                    if(posicion < (SEMILLA-1)) {
-//                        System.out.println("posicion:"+posicion+"semilla:"+SEMILLA);
-//                        System.out.println(posicion + SEMILLA);
-                        System.out.print(ALFABETO[posicion-(ALFABETO.length - SEMILLA)]);
+                    }  
+                    if((posicion - SEMILLA) < 0) {
+                        System.out.print(ALFABETO[ALFABETO.length + (posicion - SEMILLA)]);
                     }
                     else{
-//                        System.out.println(ALFABETO.length - (posicion + SEMILLA));
-                        System.out.print(ALFABETO[(posicion + SEMILLA) - ALFABETO.length]);
+                        System.out.print(ALFABETO[posicion - SEMILLA]);
                     }   
                 }
                 if(entrada == 13) {
@@ -216,7 +205,7 @@ public class Auxiliar {
     
     public static int Aleatorio(int tamaño) {
         Random rnd = new Random();
-        return ((int)(rnd.nextDouble() * (double)tamaño));
+        return (1 + (int)(rnd.nextInt(tamaño - 1)));
     }
 }
 
