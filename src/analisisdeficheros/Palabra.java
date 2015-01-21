@@ -16,7 +16,7 @@ public class Palabra {
     private static final int FINAL_FICHERO=-1;
     private static char caracter = ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
-    private static int col = 0, fil = 0;
+    private static int col = 1, fil = 1;
     private int numCaracteres = 0; 
     
     // Interface
@@ -46,11 +46,13 @@ public class Palabra {
         numCaracteres=0;
         try {
             while ((caracter!=(char) FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')) {
+                col++;
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
-                if((caracter == '\r')) {
+                if((caracter == '\r') || (caracter == '\n')) {
                     fil++;
+                    col = 1;
                 }
             }
         }catch (IOException e) {}
@@ -209,12 +211,15 @@ public class Palabra {
     }
     
     public static void informeF(String nomF) {
+        caracter = ESPACIO;
+        fil = 1;
+        col = 1;
         Auxiliar.ContarCaracteres(nomF);
         Auxiliar.ContarPalabras(nomF);
         Auxiliar.ContarLineas(nomF);
         caracter = ESPACIO;
-        fil = 0;
-        col = 0;
+        fil = 1;
+        col = 1;
     }
     
     public static void cantidaPalabras(BufferedReader buffer){
@@ -240,16 +245,12 @@ public class Palabra {
             int identificador = numAbecedario[0];
         try {
             fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
-            try {
-                while((teclado = fichero.read()) != -1) {
-                    for (int i = 0; i < numAbecedario.length; i++) {
-                        if((char)teclado == abecedario[i]){
-                            numAbecedario[i]= numAbecedario[i]+1;
-                        }
+            while((teclado = fichero.read()) != -1) {
+                for (int i = 0; i < numAbecedario.length; i++) {
+                    if((char)teclado == abecedario[i]){
+                        numAbecedario[i]= numAbecedario[i]+1;
                     }
                 }
-            } catch (IOException ex){
-                Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
             }
             for (int e = 0; e < numAbecedario.length-1; e++) {
                 int num = 0;
@@ -257,12 +258,16 @@ public class Palabra {
                     num = numAbecedario[e+1];
                     identificador =e+1;
                 }
-            }   
+            }
+            fichero.close();
         } catch (FileNotFoundException ex){
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Letra: " +abecedario[identificador] + " - Numero de veces repetidas: "+ numAbecedario[identificador]);
     }
+    
     //Opcion 2
     public static String numApariciones(String nomF){
         int teclado;
@@ -282,6 +287,7 @@ public class Palabra {
             for (int i = 0; i < caracPosibles.length; i++) {
                 System.out.println("Caracter:"+caracPosibles[i]+" - Cantidad: "+ contCaracteres[i]);
             }
+            fichero.close();
         } catch (IOException ex){
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         }   
@@ -301,6 +307,7 @@ public class Palabra {
                 if(Palabra.iguales(a, b)) {
                     System.out.println("Palabra igual es: " + a);
                     System.out.println("Fila: " + fil);
+                    System.out.println("Columna: " + col);
                 }
                 Palabra.copia(b, a);
             }
@@ -326,6 +333,7 @@ public class Palabra {
                 if(Palabra.iguales(a, b)) {
                     System.out.println("Palabra encontrada: " + b);
                     System.out.println("Fila: " + fil);
+                    System.out.println("Columna: " + col);
                 }
             }
             buffer.close();
@@ -335,6 +343,46 @@ public class Palabra {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+     public static void frecuenciaPalabras(String nomF){
+        try {
+            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
+            Palabra pal = new Palabra();
+            final int MAX_PALABRAS=10;
+            boolean existe = true;
+            Palabra [] palabras = new Palabra[MAX_PALABRAS];
+            int [] contadores = new int[MAX_PALABRAS];
+            //Inicializacion de arrays palabras y contadores
+            for (int i = 0; i < palabras.length; i++) {
+                palabras[i] = new Palabra();
+            }
+            for (int i = 0; i < contadores.length; i++) {
+                contadores[i] = 0;
+            }
+            int numPalabras=0;
+            while (Palabra.quedenPalabra(buffer)) {
+                pal.lectura(buffer);
+                existe = true;
+                for (int i = 0; i < MAX_PALABRAS; i++) {
+                    if(iguales(pal,palabras[i])) {
+                        contadores[i]++;
+                        existe = false;
+                    }
+                }
+                if(existe) {
+                    palabras[numPalabras] = pal;
+                    contadores[numPalabras]++;
+                    numPalabras++;
+                }
+            }
+            for (int i = 0; i < numPalabras; i++) {
+                System.out.println("Palabra: " + palabras[i] + " y su cantidad es: "+ contadores[i] );
+            }
+            buffer.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

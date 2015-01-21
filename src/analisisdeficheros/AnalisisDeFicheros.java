@@ -53,7 +53,7 @@ public class AnalisisDeFicheros {
                     Menu();
                     break;            
                 case '3':
-                    Auxiliar.frecuenciaPalabras(t);
+                    Palabra.frecuenciaPalabras(t);
                     Menu();
                     break;
                 case '4':
