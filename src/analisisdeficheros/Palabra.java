@@ -3,6 +3,7 @@
  *****************/
 package analisisdeficheros;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,14 +15,24 @@ public class Palabra {
     private static final int MAXIMOPALABRAS=500;
     private static final char ESPACIO = ' ';
     private static final int FINAL_FICHERO=-1;
-    private static char caracter = ESPACIO;
+    private static char caracter = (char)ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
-    private int numCaracteres = 0;
+    private static int col = 0, fil = 0;
+    private int numCaracteres = 0; 
     
     // Interface
     // Metodos constructores
     
     public Palabra() {}
+    
+    public Palabra(String p) {
+        char [] c = new char[p.toCharArray().length];
+        numCaracteres = 0;
+        for (int i = 0; i < p.toCharArray().length; i++) {
+            caracteres[numCaracteres] = p.toCharArray()[i];
+            numCaracteres++;
+        }
+    }
     
     public void lectura() throws Exception {
         numCaracteres = 0;
@@ -39,6 +50,9 @@ public class Palabra {
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
+                if((caracter == '\r')) {
+                    fil++;
+                }
             }
         }catch (IOException e) {}
     }
@@ -62,8 +76,9 @@ public class Palabra {
     
     public  static void buscarPalabra(BufferedReader f) {
         try {
-            while ((caracter == ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
-                caracter= (char) f.read();
+//            while ((caracter == (char)ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
+            while ((caracter == (char)ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
+                caracter= (char) f.read();      
             }
         } catch (IOException e) {}
     }
@@ -268,5 +283,51 @@ public class Palabra {
         }   
         return "";
     }
+    
+    public static void PalabrasRepetidas(String nomF){
+        try {
+            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
+            Palabra a = new Palabra();
+            Palabra b = new Palabra();
+            if(Palabra.quedenPalabra(buffer)){
+                a.lectura(buffer);
+            }
+            while(Palabra.quedenPalabra(buffer)){
+                b.lectura(buffer);
+                if(Palabra.iguales(a, b)) {
+                    System.out.println("Palabra igual es: " + a);
+                }
+                Palabra.copia(b, a);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
    
+    public static void BuscarPalabra(String nomF) {
+        try {
+            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
+            BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Introduce una palabra para ser buscada: ");
+            Palabra a = new Palabra(teclado.readLine());
+            Palabra b = new Palabra();
+            while(Palabra.quedenPalabra(buffer)){
+                b.lectura(buffer);
+                if(Palabra.iguales(a, b)) {
+                    System.out.println("Palabra encontrada: " + b);
+                    System.out.println("Fila: " + fil);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

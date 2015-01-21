@@ -57,12 +57,14 @@ public class AnalisisDeFicheros {
                     Menu();
                     break;
                 case '4':
+                    Palabra.BuscarPalabra(t);
                     Menu();
                     break;
                 case '5':
                     Menu();
                     break;
                 case '6':
+                    Palabra.PalabrasRepetidas(t);
                     Menu();
                     break;
                 case '7':
@@ -73,7 +75,11 @@ public class AnalisisDeFicheros {
                     Auxiliar.Decodificar(t);
                     Menu();
                     break;
-                default: break;
+                case '0':
+                    break;
+                default:
+                    Menu();
+                    break;
             }  
         } catch (IOException ex) {
             Logger.getLogger(AnalisisDeFicheros.class.getName()).log(Level.SEVERE, null, ex);

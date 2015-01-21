@@ -48,7 +48,6 @@ public class Auxiliar {
             while(Palabra.quedenPalabra(buffer)){
                 pal.lectura(buffer);
                 contador++;
-            
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,10 +114,8 @@ public class Auxiliar {
             BufferedReader fichero = new BufferedReader(new FileReader("ficheros/" + nomF));
             BufferedWriter fCodificado = new BufferedWriter(new FileWriter("ficheros/"+ nomF +".cod.txt"));
             final char [] ALFABETO = "abcdefghijklmnopqrstuvwxyz.,:@?!\"()<>".toCharArray(); 
-            System.err.println("Tamano alfabeto:" + ALFABETO.length );
             int entrada=fichero.read();
             int SEMILLA = Aleatorio(ALFABETO.length-1);
-            System.err.println(SEMILLA);
             while (entrada!=-1) {
                 int posicion = 0;
                 // EL CASTING (char) no es necesario
@@ -167,10 +164,8 @@ public class Auxiliar {
             System.out.print("Introduce semilla: ");
             int SEMILLA = Integer.parseInt(teclado.readLine());
             int entrada=fichero.read();
-            System.err.println(SEMILLA);
             while (entrada!=-1) {
                 int posicion = 0;
-                // EL CASTING (char) no es necesario
                 if ((((char)entrada >= 'a') && ((char)entrada <= 'z')) || ((char)entrada >= 'A') && ((char)entrada <= 'Z')
                    ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
                    ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
@@ -200,7 +195,6 @@ public class Auxiliar {
         } catch (IOException ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
     
     public static int Aleatorio(int tamaño) {
