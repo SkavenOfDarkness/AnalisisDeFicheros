@@ -15,7 +15,7 @@ public class AnalisisDeFicheros {
             System.out.print("Introduce nombre del fichero a analizar: ");
             teclado = new BufferedReader(new InputStreamReader(System.in));
             t = teclado.readLine();
-            Menu();          
+            Menu();
         } catch (IOException ex) {
             Logger.getLogger(AnalisisDeFicheros.class.getName()).log(Level.SEVERE, null, ex);
         }

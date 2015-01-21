@@ -49,10 +49,13 @@ public class Auxiliar {
                 pal.lectura(buffer);
                 contador++;
             }
+            System.out.println("El numero de palabras es: "+ contador);
+            buffer.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("El numero de palabras es: "+ contador);
     }
     
     public static void ContarLineas(String nomF){
@@ -63,7 +66,7 @@ public class Auxiliar {
                 numLineas++;
             }
             System.out.println("El número de lineas es: "+ numLineas);
-            
+            fichero.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -3,7 +3,6 @@
  *****************/
 package analisisdeficheros;
 
-import com.sun.org.apache.xpath.internal.operations.Equals;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +14,7 @@ public class Palabra {
     private static final int MAXIMOPALABRAS=500;
     private static final char ESPACIO = ' ';
     private static final int FINAL_FICHERO=-1;
-    private static char caracter = (char)ESPACIO;
+    private static char caracter = ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
     private static int col = 0, fil = 0;
     private int numCaracteres = 0; 
@@ -80,7 +79,9 @@ public class Palabra {
             while ((caracter == (char)ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
                 caracter= (char) f.read();      
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            System.err.println("Error en buscarPalabra para fila |||||| " + e);
+        }
     }
     
     public static boolean quedenPalabra() throws Exception {
@@ -211,6 +212,9 @@ public class Palabra {
         Auxiliar.ContarCaracteres(nomF);
         Auxiliar.ContarPalabras(nomF);
         Auxiliar.ContarLineas(nomF);
+        caracter = ESPACIO;
+        fil = 0;
+        col = 0;
     }
     
     public static void cantidaPalabras(BufferedReader buffer){
@@ -296,9 +300,11 @@ public class Palabra {
                 b.lectura(buffer);
                 if(Palabra.iguales(a, b)) {
                     System.out.println("Palabra igual es: " + a);
+                    System.out.println("Fila: " + fil);
                 }
                 Palabra.copia(b, a);
             }
+            buffer.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -322,6 +328,7 @@ public class Palabra {
                     System.out.println("Fila: " + fil);
                 }
             }
+            buffer.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Palabra.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
