@@ -47,6 +47,7 @@ public class Palabra {
         try {
             while ((caracter!=(char) FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')) {
                 col++;
+                //REINICIAR
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
@@ -55,7 +56,9 @@ public class Palabra {
                     col = 1;
                 }
             }
-        }catch (IOException e) {}
+        }catch (IOException e) {
+        
+        }
     }
     
     public void escritura(BufferedWriter f) {
@@ -352,11 +355,14 @@ public class Palabra {
             Palabra pal = new Palabra();
             final int MAX_PALABRAS=10;
             boolean existe = true;
-            Palabra [] palabras = new Palabra[MAX_PALABRAS];
+            /* Usamos un array de strings, en lugar de uno de palabras, devido a que el array de palabras
+            coge el valor de las palabra que está leyendo del fichero ya que al ser de la misma clase comparten
+            las variables y no distingue en cual debe asignarlo, por ello lo asigna en todas las palabras.*/
+            String [] Spalabras = new String[MAX_PALABRAS];
             int [] contadores = new int[MAX_PALABRAS];
             //Inicializacion de arrays palabras y contadores
-            for (int i = 0; i < palabras.length; i++) {
-                palabras[i] = new Palabra();
+            for (int i = 0; i < Spalabras.length; i++) {
+                Spalabras[i] = "";
             }
             for (int i = 0; i < contadores.length; i++) {
                 contadores[i] = 0;
@@ -366,19 +372,19 @@ public class Palabra {
                 pal.lectura(buffer);
                 existe = true;
                 for (int i = 0; i < MAX_PALABRAS; i++) {
-                    if(iguales(pal,palabras[i])) {
+                    if(pal.toString().equals(Spalabras[i])) {
                         contadores[i]++;
                         existe = false;
                     }
                 }
                 if(existe) {
-                    palabras[numPalabras] = pal;
+                    Spalabras[numPalabras] = pal.toString();
                     contadores[numPalabras]++;
                     numPalabras++;
                 }
             }
             for (int i = 0; i < numPalabras; i++) {
-                System.out.println("Palabra: " + palabras[i] + " y su cantidad es: "+ contadores[i] );
+                System.out.println("Palabra: " + Spalabras[i] + " y su cantidad es: "+ contadores[i] );
             }
             buffer.close();
         } catch (Exception ex) {

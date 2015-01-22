@@ -167,5 +167,6 @@ public class Auxiliar {
         Random rnd = new Random();
         return (1 + (int)(rnd.nextInt(tamaño - 1)));
     }
+    
 }
 
