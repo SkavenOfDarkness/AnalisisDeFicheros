@@ -3,11 +3,7 @@
  *****************/
 package analisisdeficheros;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,11 +16,12 @@ public class Palabra {
     private static final int FINAL_FICHERO=-1;
     private static char caracter = ESPACIO;
     private final char [] caracteres = new char[MAXIMO];
-    private static int col = 0, fil = 1;
+    private static int col = 1, fil = 1;
     private int numCaracteres = 0; 
     
     // Interface
     // Metodos constructores
+    
     public Palabra() {
     }
     
@@ -45,30 +42,6 @@ public class Palabra {
         return fil;
     }
     
-    public static int getMaxPalabras() {
-        return MAXIMOPALABRAS;
-    }
-    
-    public int getCaracteres() {
-        return numCaracteres;
-    }
-
-    public static char getESPACIO() {
-        return ESPACIO;
-    }
-
-    public static void setCaracter(char caracter) {
-        Palabra.caracter = caracter;
-    }
-
-    public static void setCol(int col) {
-        Palabra.col = col;
-    }
-
-    public static void setFil(int fil) {
-        Palabra.fil = fil;
-    }
-    
     public void lectura() throws Exception {
         numCaracteres = 0;
         while (((caracter >= 'a') && (caracter <= 'z')) || ((caracter >= 'A') && (caracter <= 'Z'))) {
@@ -81,39 +54,42 @@ public class Palabra {
     public void lectura(BufferedReader f) {
         numCaracteres=0;
         try {
-            while ((caracter!=(char)FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')
-                    &&(caracter!=',')&&(caracter!=':')&&(caracter!='@')&&(caracter!='?')&&(caracter!='!')
-                    &&(caracter!='"')&&(caracter!='(')&&(caracter!=')')&&(caracter!='<')&&(caracter!='>')) {
+            while ((caracter!=(char) FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')) {
                 col++;
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
+                if((caracter == '\r') || (caracter == '\n')) {
+                    fil++;
+                    col = 1;
+                }
             }
         }catch (IOException e) {
         
         }
     }
     
+    public void escritura(BufferedWriter f) {
+        try {
+            for (int i=0;i<numCaracteres;i++) {
+                f.write(caracteres[i]);
+            }
+            f.write(ESPACIO);
+          //f.newLine();
+        }catch (IOException e) {}
+    }
+    
     private static void buscarPalabra() throws Exception {
-        while ((caracter==(char)ESPACIO)||(caracter =='\n')||(caracter=='\r')||(caracter==',')||(caracter==':')
-                ||(caracter=='@')||(caracter=='?')||(caracter=='!')||(caracter=='"')||(caracter=='(')
-                ||(caracter==')')||(caracter=='<')||(caracter=='>')) {
+        //while (caracter == ESPACIO)
+        while ((caracter==ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
             caracter = (char)System.in.read();
         }
     }
     
     public  static void buscarPalabra(BufferedReader f) {
         try {
-            while ((caracter==(char)ESPACIO)||(caracter =='\n')||(caracter=='\r')||(caracter==',')||(caracter==':')
-                    ||(caracter=='@')||(caracter=='?')||(caracter=='!')||(caracter=='"')||(caracter=='(')
-                    ||(caracter==')')||(caracter=='<')||(caracter=='>')) {
-                if((caracter == '\r') || (caracter == '\n')) {
-                    fil++;
-                    col = 1;
-                }
-                if(caracter == (char)ESPACIO) {
-                    col++;
-                }
+//            while ((caracter == (char)ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
+            while ((caracter == (char)ESPACIO)||(caracter =='\n')||(caracter=='\r')) {
                 caracter= (char) f.read();      
             }
         } catch (IOException e) {
@@ -123,7 +99,7 @@ public class Palabra {
     
     public static boolean quedenPalabra() throws Exception {
         buscarPalabra();
-        return (caracter != (char)FINAL_SECUENCIA);
+        return (caracter != FINAL_SECUENCIA);
     }
     
     public static boolean quedenPalabra(BufferedReader f) {
@@ -139,6 +115,91 @@ public class Palabra {
             pal = pal + caracteres[i];
         }
         return pal;
+    }
+    
+    public String toStringInvertido() {
+        String pal = "";
+        for (int i = numCaracteres - 1; i >= 0; i--) {
+            pal = pal + caracteres[i];
+        }
+        return pal;
+    }
+    
+    public int getCaracteres() {
+        return numCaracteres;
+    }
+    
+    public int numVocales() {
+        int contador = 0;
+        for (int i = 0; i < numCaracteres; i++) {
+            if ((caracteres[i] == 'a') || (caracteres[i] == 'e') || (caracteres[i] == 'i') 
+                    || (caracteres[i] == 'o') || (caracteres[i] == 'u')) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+    
+    public boolean esCapicua() throws Exception {
+        int inicio = 0;
+        int fin = numCaracteres - 1;
+        while ((caracteres[inicio] == caracteres[fin]) && (inicio < fin - 2)) {
+            inicio++;
+            fin--;
+        }
+        return (caracteres[inicio] == caracteres[fin]);
+    }
+    
+    public boolean tieneTodasLetras() throws Exception {
+        char [] abecedario = {'a','b','c','d','e','f','g','h','i','j','k','l',
+            'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        int contador = 0;
+        if (numCaracteres >= 26) {
+            for (int i = 0; i < numCaracteres; i++) {
+                for (int j = 0; j < abecedario.length; j++) {
+                    if (caracteres[i] == abecedario[j]) {
+                        contador++;
+                        abecedario[j] = '.';
+                        break;
+                    }
+                }
+            }
+            return (contador == abecedario.length);
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public boolean tieneTodasVocales() throws Exception {
+        int[] contadoresVocales = {0,0,0,0,0};
+        for (int indice = 0; indice < numCaracteres; indice++) {
+            switch (caracteres[indice]) {
+                case 'a': 
+                    contadoresVocales[0]++;
+                    break;
+                case 'e':
+                    contadoresVocales[1]++;
+                    break;
+                case 'i':
+                    contadoresVocales[2]++;
+                    break;
+                case 'o':
+                    contadoresVocales[3]++;
+                    break;
+                case 'u':
+                    contadoresVocales[4]++;
+                    break;
+                default:
+            }
+        }
+        
+        for (int i = 0; i < contadoresVocales.length; i++) {
+            if (contadoresVocales[i] == 0) {
+                return false;
+            }
+        }
+        return true;
     }
     
     public static boolean iguales(Palabra a, Palabra b) throws Exception {
@@ -159,6 +220,31 @@ public class Palabra {
             b.caracteres[i] = a.caracteres[i];
         }
         b.numCaracteres = a.numCaracteres;
+    }
+    
+    public static void informeF(String nomF) {
+        caracter = ESPACIO;
+        fil = 1;
+        col = 1;
+        Auxiliar.ContarCaracteres(nomF);
+        Auxiliar.ContarPalabras(nomF);
+        Auxiliar.ContarLineas(nomF);
+        caracter = ESPACIO;
+        fil = 1;
+        col = 1;
+    }
+    
+    public static void cantidaPalabras(BufferedReader buffer){
+        Palabra pal[] = new Palabra[MAXIMOPALABRAS];
+        for (int i = 0; i < pal.length; i++) {
+          pal[i]=new Palabra();
+        }
+        int i = 0;
+        while(quedenPalabra(buffer)){
+            pal[i].lectura(buffer);
+            System.out.println(" Palabra: "+ pal[i] );
+            i++;
+        }
     }
     
     // Opcion 1
@@ -211,7 +297,7 @@ public class Palabra {
                 }
             }
             for (int i = 0; i < caracPosibles.length; i++) {
-                System.out.println("Caracter: "+caracPosibles[i]+" - Cantidad: "+ contCaracteres[i]);
+                System.out.println("Caracter:"+caracPosibles[i]+" - Cantidad: "+ contCaracteres[i]);
             }
             fichero.close();
         } catch (IOException ex){
@@ -276,12 +362,13 @@ public class Palabra {
         try {
             BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
             Palabra pal = new Palabra();
+            final int MAX_PALABRAS=10;
             boolean existe = true;
             /* Usamos un array de strings, en lugar de uno de palabras, devido a que el array de palabras
             coge el valor de las palabra que está leyendo del fichero ya que al ser de la misma clase comparten
             las variables y no distingue en cual debe asignarlo, por ello lo asigna en todas las palabras.*/
-            String [] Spalabras = new String[MAXIMOPALABRAS];
-            int [] contadores = new int[MAXIMOPALABRAS];
+            String [] Spalabras = new String[MAX_PALABRAS];
+            int [] contadores = new int[MAX_PALABRAS];
             //Inicializacion de arrays palabras y contadores
             for (int i = 0; i < Spalabras.length; i++) {
                 Spalabras[i] = "";
@@ -290,11 +377,10 @@ public class Palabra {
                 contadores[i] = 0;
             }
             int numPalabras=0;
-            int identificador = contadores[0];
             while (Palabra.quedenPalabra(buffer)) {
                 pal.lectura(buffer);
                 existe = true;
-                for (int i = 0; i < MAXIMOPALABRAS; i++) {
+                for (int i = 0; i < MAX_PALABRAS; i++) {
                     if(pal.toString().equals(Spalabras[i])) {
                         contadores[i]++;
                         existe = false;
@@ -306,88 +392,12 @@ public class Palabra {
                     numPalabras++;
                 }
             }
-            for (int i = 0; i < contadores.length-1; i++) {
-                int num = 0;
-                if(contadores[num]<contadores[i+1]){
-                    num = contadores[i+1];
-                    identificador = i+1;
-                }
+            for (int i = 0; i < numPalabras; i++) {
+                System.out.println("Palabra: " + Spalabras[i] + " y su cantidad es: "+ contadores[i] );
             }
-            System.out.println("Palabra: " +Spalabras[identificador] + " - Numero de veces repetidas: "+ contadores[identificador]);
             buffer.close();
         } catch (Exception ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-     
-     public static void ContarCaracteres(String nomF){    
-        try {
-            BufferedReader buffer=new BufferedReader(new FileReader("ficheros/" + nomF));
-            int contador=0;
-            int entrada=buffer.read();
-            while (entrada!=-1) {
-                // EL CASTING (char) no es necesario
-                if ((((char)entrada >= 'a') && ((char)entrada <= 'z')) || ((char)entrada >= 'A') && ((char)entrada <= 'Z')
-                   ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
-                   ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
-                   ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
-                    //  . , : @ ? ! " ( ) < >
-                    contador++;
-                }
-                entrada=buffer.read();
-            }
-            System.out.println("----------------------------------");
-            System.out.println("       Informe del fichero        ");
-            System.out.println("----------------------------------");
-            System.out.println("El número de caracteres es: " + contador);
-            buffer.close();
-        } catch (FileNotFoundException ex) {
-            System.err.println("Fichero no encontrado");
-            AnalisisDeFicheros.Inicio();
-        } catch (IOException ex) {
-            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        }    
-    }
-    
-    public static void ContarPalabras(String nomF){    
-        int contador = 0;
-        try {
-            BufferedReader buffer=new BufferedReader(new FileReader("ficheros/" + nomF));
-            Palabra pal=new Palabra();
-            while(Palabra.quedenPalabra(buffer)){
-                pal.lectura(buffer);
-                contador++;
-            }
-            if(contador <= MAXIMOPALABRAS){
-                System.out.println("El numero de palabras es: " + contador);
-            }
-            else{
-                System.out.println("El fichero contiene más de " + MAXIMOPALABRAS + " palabras, exactamente: " + contador);
-                System.out.println();
-                AnalisisDeFicheros.Inicio();
-            }
-            buffer.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static void ContarLineas(String nomF){
-        try {
-            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
-            int numLineas = 0;
-            while(buffer.readLine()!=null){
-                numLineas++;
-            }
-            System.out.println("El número de lineas es: "+ numLineas);
-            buffer.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
     }
 }

@@ -1,27 +1,78 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package analisisdeficheros;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+/**
+ *
+ * @author Javier
+ */
 
 public class Auxiliar {
-    public static void informeF(String nomF) {
-        Palabra.setCaracter(Palabra.getESPACIO());
-        Palabra.setFil(1);
-        Palabra.setCol(0);
-        Palabra.ContarCaracteres(nomF);
-        Palabra.ContarPalabras(nomF);
-        Palabra.ContarLineas(nomF);
-        Palabra.setCaracter(Palabra.getESPACIO());
-        Palabra.setFil(1);
-        Palabra.setCol(0);
+    public static void ContarCaracteres(String nomF){    
+        try {
+            BufferedReader buffer=new BufferedReader(new FileReader("ficheros/" + nomF));
+            int contador=0;
+            int entrada=buffer.read();
+            while (entrada!=-1) {
+                // EL CASTING (char) no es necesario
+                if ((((char)entrada >= 'a') && ((char)entrada <= 'z')) || ((char)entrada >= 'A') && ((char)entrada <= 'Z')
+                   ||((char)entrada=='.')||((char)entrada==',')||((char)entrada==':')||((char)entrada=='@')
+                   ||((char)entrada=='?')||((char)entrada=='!')||((char)entrada=='"')||((char)entrada=='(')
+                   ||((char)entrada==')')||((char)entrada=='<')||((char)entrada=='>')){
+                    //  . , : @ ? ! " ( ) < >
+                    contador++;
+                }
+                entrada=buffer.read();
+            }
+            System.out.println("El número de caracteres es: " + contador);
+            buffer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+    }
+    
+    public static void ContarPalabras(String nomF){    
+        int contador = 0;
+        try {
+            BufferedReader buffer=new BufferedReader(new FileReader("ficheros/" + nomF));
+            Palabra pal=new Palabra();
+            while(Palabra.quedenPalabra(buffer)){
+                pal.lectura(buffer);
+                contador++;
+            }
+            System.out.println("El numero de palabras es: "+ contador);
+            buffer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void ContarLineas(String nomF){
+        try {
+            BufferedReader buffer = new BufferedReader(new FileReader("ficheros/" + nomF));
+            int numLineas = 0;
+            while(buffer.readLine()!=null){
+                numLineas++;
+            }
+            System.out.println("El número de lineas es: "+ numLineas);
+            buffer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
     }
     
     public static void Codificar(String nomF){
@@ -120,16 +171,16 @@ public class Auxiliar {
     public static void BuscarTexto(String nomF) {
         try {
             BufferedReader fichero = new BufferedReader(new FileReader("ficheros/"+ nomF));
-            Palabra frase[] = new Palabra[Palabra.getMaxPalabras()];
+            Palabra frase[] = new Palabra[10];
             Palabra palComp = new Palabra();
             for (int i = 0; i < frase.length; i++) {
                 frase[i] = new Palabra();
             }
-            int col[] = new int[Palabra.getMaxPalabras()];
+            int col[] = new int[10];
             for (int i = 0; i < col.length; i++) {
                 col[i] = 0;
             }
-            int fil[] = new int[Palabra.getMaxPalabras()];
+            int fil[] = new int[10];
             for (int i = 0; i < col.length; i++) {
                 fil[i] = 0;
             }
@@ -139,7 +190,6 @@ public class Auxiliar {
                 frase[y].lectura();
                 y++;
             }
-            boolean g = true;
             while((Palabra.quedenPalabra(fichero)) && (i < y)) {
                 palComp.lectura(fichero);
                 if (Palabra.iguales(frase[i], palComp)) {
@@ -147,19 +197,17 @@ public class Auxiliar {
                     fil[i] = palComp.getFil();
                     if(i == y-1){
                         for (int j = 0; j < y; j++) {
-                            System.out.println("Palabra encontrada: " + frase[j]);
-                            System.out.println("Fila: " + fil[j]);
-                            System.out.println("Columna: " + (col[j]-frase[j].getCaracteres()));
+                            System.out.println("Iguales: " + frase[j] + " columna: "
+                                    + (col[j]-frase[j].getCaracteres()) +
+                                    " fila: " + fil[j]);
                         }
                     }
                     i++;
                 }
                 else {
                     i = 0;
+                    System.out.println("No son iguales");
                 }
-            }
-            if(i == 0) {
-                System.out.println("No se ha encontrado coincidencia");
             }
             fichero.close();
         } catch (FileNotFoundException ex) {
@@ -169,13 +217,6 @@ public class Auxiliar {
         } catch (Exception ex) {
             Logger.getLogger(Auxiliar.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public static void FormatoPantalla() {
-        System.out.println("----------------------------------");
-        System.out.println();
-        System.out.println();
-        System.out.println();
-    }
+    }  
 }
 
