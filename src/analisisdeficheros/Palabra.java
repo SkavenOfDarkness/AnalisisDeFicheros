@@ -22,7 +22,8 @@ public class Palabra {
     // Interface
     // Metodos constructores
     
-    public Palabra() {}
+    public Palabra() {
+    }
     
     public Palabra(String p) {
         char [] c = new char[p.toCharArray().length];
@@ -31,6 +32,14 @@ public class Palabra {
             caracteres[numCaracteres] = p.toCharArray()[i];
             numCaracteres++;
         }
+    }
+
+    public static int getCol() {
+        return col;
+    }
+
+    public static int getFil() {
+        return fil;
     }
     
     public void lectura() throws Exception {
@@ -47,7 +56,6 @@ public class Palabra {
         try {
             while ((caracter!=(char) FINAL_FICHERO)&&(caracter!=ESPACIO)&&(caracter !='\n')&&(caracter!='\r')) {
                 col++;
-                //REINICIAR
                 caracteres[numCaracteres]=caracter;
                 numCaracteres++;
                 caracter=(char) f.read();
@@ -95,8 +103,9 @@ public class Palabra {
     }
     
     public static boolean quedenPalabra(BufferedReader f) {
+        caracter = ' ';
         buscarPalabra(f);
-        return (caracter!=(char) -1);
+        return (caracter!=(char) FINAL_FICHERO);
     }
     
     @Override
@@ -309,8 +318,8 @@ public class Palabra {
                 b.lectura(buffer);
                 if(Palabra.iguales(a, b)) {
                     System.out.println("Palabra igual es: " + a);
-                    System.out.println("Fila: " + fil);
-                    System.out.println("Columna: " + col);
+                    System.out.println("Fila: " + (fil));
+                    System.out.println("Columna: " + (col-a.numCaracteres));
                 }
                 Palabra.copia(b, a);
             }
@@ -336,7 +345,7 @@ public class Palabra {
                 if(Palabra.iguales(a, b)) {
                     System.out.println("Palabra encontrada: " + b);
                     System.out.println("Fila: " + fil);
-                    System.out.println("Columna: " + col);
+                    System.out.println("Columna: " + (col-b.numCaracteres));
                 }
             }
             buffer.close();

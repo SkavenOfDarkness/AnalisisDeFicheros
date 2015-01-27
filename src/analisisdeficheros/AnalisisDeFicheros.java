@@ -61,6 +61,8 @@ public class AnalisisDeFicheros {
                     Menu();
                     break;
                 case '5':
+                    Auxiliar.BuscarTexto(t);
+                    teclado.skip(1);
                     Menu();
                     break;
                 case '6':
